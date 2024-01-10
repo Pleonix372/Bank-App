@@ -1,0 +1,26 @@
+@use "../../style" as s;
+
+.data-block {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: s.space(3);
+    padding: s.space(4);
+    gap: s.space(4);
+
+    &__content {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__card {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__card:not(:last-of-type) {
+        border-bottom: 1px solid s.color(border);
+        padding-bottom: s.space(4);
+    }
+}
+

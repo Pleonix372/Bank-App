@@ -1,0 +1,42 @@
+@use '../../style' as s;
+
+.main-home {
+  background-image: url(../../png/background-home.png);
+  background-repeat: no-repeat;
+  border-radius: s.space(8);
+  position: relative;
+}
+
+.money {
+  position: absolute;
+
+  right: 0;
+  top: 0;
+}
+
+.button_block {
+  display: flex;
+  flex-direction: column;
+  gap: s.space(3);
+  margin-top: s.space(125);
+  padding: 0 s.space(5);
+  padding-bottom: s.space(10);
+}
+
+.button {
+  text-align: center;
+  width: 100%;
+  height: 56px;
+  border-radius: s.space(3);
+}
+
+.button--first {
+  background-color: s.color(main);
+  color: #fff;
+}
+
+.button--second {
+  background-color: #fff;
+  color: s.color(main);
+  border: 1px solid s.color(main);
+}

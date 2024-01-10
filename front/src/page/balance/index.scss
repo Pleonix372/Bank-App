@@ -1,0 +1,84 @@
+@use '../../style' as s;
+
+.main-balance {
+    background-image: url(../../png/background-balance.png);
+    background-repeat: no-repeat;
+    border-radius: s.space(8);
+    padding: s.space(12) s.space(5) 0 s.space(5);
+    display: flex;
+    flex-direction: column;
+    gap: s.space(5);
+
+}
+  
+.icon {
+    &__receive{
+        background-image: url("../../svg/receive.svg");
+        
+    }
+
+    &__send{
+        background-image: url("../../svg/send.svg");
+        
+    }
+
+    &__receive,
+    &__send {
+        height: 28px;
+        width: 28px;
+        position: absolute;
+        top: calc(50% - 14px);
+        right: calc(50% - 14px);
+        background-size: cover;
+        @include s.click;
+    }    
+}
+
+.balance {
+    text-align: center;
+    color: #fff;
+    font-size: 34px;
+
+    &--green {
+        color: s.color(green);
+    }
+
+    &__link {
+        text-decoration: none;
+    }
+}
+
+.button-operations {
+    display: flex;
+    justify-content: center;
+    gap: s.space(5);
+    padding-top: s.space(5);
+
+    &__background--white {
+        height: 70px;
+        width: 70px;
+        background-color: #fff;
+        border-radius: 35px;
+        position: relative;
+    }
+    
+    &__background--blue {
+        height: 52px;
+        width: 52px;
+        background-color: #5B94E9;
+        border-radius: 26px;
+        position: absolute;
+        top: calc(50% - 26px);
+        right: calc(50% - 26px);
+    }   
+    
+    &__text {
+        text-align: center;
+        padding-top: s.space(1);
+        color: s.color(text);
+    }
+}
+
+.card__block {
+    padding-bottom: s.space(5);
+}

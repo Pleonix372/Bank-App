@@ -1,0 +1,17 @@
+@use "../../style" as s;
+@use '../../style/form.scss' as form;
+
+h2 {
+    font-size: 16px;
+    font-weight: 500;
+    padding-bottom: s.space(1);
+}
+
+.divider {
+    border: 1px solid s.color(border);
+    margin: s.space(1);
+}
+
+.margin div:first-child {
+    margin-bottom: s.space(2);
+}

@@ -1,0 +1,34 @@
+@use "../../style" as s;
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: s.space(3);
+}
+
+.heading--home {
+  padding-top: 100px;
+  gap: s.space(6);
+}
+
+.title {
+  color: #121212;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.description {
+  color: #939199;
+  font-size: 14px;
+}
+
+.title--home {
+  font-size: 42px;
+  color: #fff;
+}
+
+.description--home {
+  color: #fff;
+  font-size: 20px;
+}

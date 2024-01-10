@@ -1,0 +1,15 @@
+$colorMap: (
+	main: #775CE5,
+	border: #E9E8EB,
+	title: #121212,
+	description: #939199,
+	text: #1D1D1F,
+	warningText: #F2883D,
+	warningBackground: #FEF3EC, 
+	red: #F23152,
+	green: #26BF80,
+);
+
+@function color ($key) {
+	@return map-get($colorMap, $key);
+}

@@ -1,0 +1,34 @@
+@use "../../style" as s;
+
+.title-balance {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  &__text {
+    font-size: 20px;
+    color: s.color(text);
+    font-weight: 500;
+
+  }
+
+  &__balance {
+    font-size: 16px;
+    color: #fff;
+  }
+}
+
+.icon {
+  &__left,
+  &__right {
+    height: 24px;
+    width: 24px;
+
+    background-size: cover;
+    @include s.click;
+  }
+}
+
+.hidden {
+  visibility: hidden;
+}

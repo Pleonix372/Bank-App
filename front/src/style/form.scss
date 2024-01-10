@@ -1,0 +1,82 @@
+@use'./index' as s;
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: s.space(5);
+    padding: s.space(12) s.space(5) s.space(5) s.space(5);
+
+    
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: s.space(5);
+  }
+  
+    &__item {
+      display: flex;
+      flex-direction: column;
+      gap: s.space(2);
+  }
+  
+  &__error {
+      color: s.color(red);
+      font-size: 12px;
+      display: none;
+  
+      &--active {
+          display: block;
+      }
+  }
+}
+
+.warning {    
+      // display: none;
+      width: 100%;
+      padding: 20px 10px;
+      text-align: center;
+      font-size: 14px;
+      color: s.color(warningText);
+      background-color: s.color(warningBackground);
+      border-radius: s.space(3);
+      position: relative;
+
+      
+        // &--active {
+        //     display: block;
+        // }
+
+        // &--content {
+        //     position: relative;
+        // }
+
+        &--icon {
+          margin-left: 10px;
+            height: 16px;
+            width: 16px;
+
+            background-image: url("../svg/warning.svg");
+            background-size: cover;
+
+            position: absolute;
+            left: 10px;
+            top: calc(50% - 7px);
+        }
+
+        &--text {
+            padding: 0 s.space(8);
+        }
+
+        &--disabled {
+            display: none;
+        }
+}
+
+.validation {
+  &--active {
+      border-color: s.color(red) !important;          
+  }
+}
+
+//========================
+

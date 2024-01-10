@@ -1,0 +1,16 @@
+@use "../../style" as s;
+
+.back {
+    background-color: #F7F7F7;
+    border-radius: s.space(8);
+    padding: s.space(12) s.space(5) s.space(10) s.space(5);
+    display: flex;
+    flex-direction: column;
+    gap: s.space(5);
+}
+
+.card-zone {
+    display: flex;
+    flex-direction: column;
+}
+

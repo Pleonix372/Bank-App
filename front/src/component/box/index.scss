@@ -1,0 +1,9 @@
+@use "../../style" as s;
+
+.box {
+  width: 100%;
+
+  border: 1px solid #1f1d1d;
+  padding: s.space(5);
+  border-radius: s.space(8);
+}

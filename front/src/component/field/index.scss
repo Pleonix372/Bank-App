@@ -1,0 +1,44 @@
+@use "../../style" as s;
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: s.space(2);
+
+  &__label {
+    font-size: 14px;
+    color: s.color(text);
+  }
+
+  &__input {
+    border: 1px solid s.color(border);
+    background-color: #fff;
+
+    padding: s.space(4);
+    border-radius: 10px;
+
+    font-size: 14px;
+
+    &::placeholder {
+      color: s.color(description);
+    }
+
+    color: s.color(text);
+
+    transition: border-color 0.3s;
+
+    &:hover {
+      border-color: gray;
+    }
+
+    &:focus {
+      border-color: s.color(main);
+    }
+
+    // &--error {
+    //   border-color: s.color(red) !important;
+    // }
+
+    
+  }
+}
