@@ -44,22 +44,37 @@ export class Form {
     }
   };
 
-  checkDisabled = () => {
+  checkDisabled = (buttonName) => {
     let disabled = false;
-
     Object.values(this.FIELD_NAME).forEach((name) => {
       if (this.error[name] || this.value[name] === undefined) {
         disabled = true;
       }
     });
-
     const el = document.querySelector(`.button`);
-
     if (el) {
       el.classList.toggle("button--disabled", Boolean(disabled));
     }
-
     this.disabled = disabled;
+    // let disabled = false;
+    // const fields = Object.values(this.FIELD_NAME).filter((name) =>
+    //   buttonName === "saveEmail"
+    //     ? ["email", "password"].includes(name)
+    //     : ["oldPassword", "newPassword"].includes(name)
+    // );
+
+    // fields.forEach((name) => {
+    //   if (this.error[name] || this.value[name] === undefined) {
+    //     disabled = true;
+    //   }
+    // });
+
+    // const el = document.querySelector(`.button--${buttonName}`);
+    // if (el) {
+    //   el.classList.toggle("button--disabled", Boolean(disabled));
+    // }
+
+    // this.disabled = disabled;
   };
 
   validateAll = () => {
@@ -72,8 +87,11 @@ export class Form {
     });
   };
 
-  setWarning = (status) => {
+  setWarning = (status, text) => {
     const el = document.querySelector(`.warning`);
+    console.log("Element:", el);
+    console.log("Status:", status);
+    console.log("Text:", text);
 
     if (status === "error") {
       el.className = "warning";
@@ -81,31 +99,22 @@ export class Form {
       el.className = "warning warning--disabled";
     }
 
-    const warningIcon = document.querySelector(`.warning--icon`);
+    const warningIcon = document.querySelector(`.warning--icon`); // ?
     const warningText = document.querySelector(`.warning--text`);
 
-    if (status === "error") {
-      warningIcon.innerHTML = "";
-      warningText.innerText = "A user with the same name is already exist";
+    // if (status === "error") {
+    //   warningIcon.innerHTML = "";
+    //   warningText.innerText = "A user with the same name is already exist";
+    // } else {
+    //   warningIcon.innerHTML = "";
+    //   warningText.innerHTML = "";
+    // }
+
+    if (text) {
+      warningIcon.innerHTML = ""; // ?
+      warningText.innerText = text;
     } else {
-      warningIcon.innerHTML = "";
-      warningText.innerHTML = "";
+      el.className = "warning warning--disabled";
     }
   };
-
-  //   setAlert = (status, text) => {
-  //     const el = document.querySelector(`.alert`);
-
-  //     if (status === "progress") {
-  //       el.className = "alert alert--progress";
-  //     } else if (status === "success") {
-  //       el.className = "alert alert--success";
-  //     } else if (status === "error") {
-  //       el.className = "alert alert--error";
-  //     } else {
-  //       el.className = "alert alert--disabled";
-  //     }
-
-  //     if (text) el.innerText = text;
-  //   };
 }

@@ -19,8 +19,6 @@ export default function Notifications() {
             name="New reward system"
             time="10 min ago"
             type="Annoucement"
-            hiddenSum="none"
-            hiddenPayment="none"
             padding="padding"
           />
           <Card
@@ -28,8 +26,6 @@ export default function Notifications() {
             name="New login"
             time="10 min ago"
             type="Warning"
-            hiddenSum="none"
-            hiddenPayment="none"
             padding="padding"
           />
           <Card
@@ -37,8 +33,6 @@ export default function Notifications() {
             name="New reward system"
             time="10 min ago"
             type="Annoucement"
-            hiddenSum="none"
-            hiddenPayment="none"
             padding="padding"
           />
         </div>

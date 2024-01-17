@@ -19,8 +19,8 @@ export default function Component({
   placeholder,
 }) {
   return (
-    <div class="field">
-      <label for={name} class="field__label">
+    <div className="field">
+      <label htmlFor={name} className="field__label">
         {label}
       </label>
       <input
@@ -28,7 +28,7 @@ export default function Component({
         onInput={onInput}
         // onInput={(event) => Field.handleInput(event, onInput)}
         type={type}
-        class="field__input validation"
+        className="field__input validation"
         name={name}
         placeholder={placeholder}
       />

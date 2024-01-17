@@ -15,9 +15,10 @@ export default function Component({
   sum,
   padding,
   hiddenContent,
-  hiddenSum,
-  hiddenPayment,
+  showSum,
+  showPayment,
   paymentReverse,
+  operation,
 }) {
   return (
     <div className={`card card__${padding}`}>
@@ -35,11 +36,11 @@ export default function Component({
         </div>
       </div>
 
-      <div className={`card__sum ${hiddenSum}`}>
+      <div className={`card__sum card__sum--${operation} ${showSum}`}>
         {sign}${sum}
       </div>
 
-      <div className={`card__payment ${hiddenPayment}`}>
+      <div className={`card__payment ${showPayment}`}>
         <div className={`card__payment--group ${paymentReverse}`}>
           <img src={Mastercard} alt="mastercard" />
           <img src={Green} alt="mastercard" />

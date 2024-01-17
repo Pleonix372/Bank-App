@@ -8,8 +8,52 @@ import Notifications from "../../svg/notifications.svg";
 import Stripe from "../../svg/stripe.svg";
 import Coinbase from "../../svg/coinbase.svg";
 import User from "../../svg/user.svg";
+import { Link } from "react-router-dom";
+import { useState } from "react";
 
-export default function Balance() {
+// import { Alert, Loader, LOAD_STATUS } from "../../component/load";
+
+export default function Balance(onCreate) {
+  // const [status, setStatus] = useState(null);
+  // const [message, setMessage] = useState("");
+
+  // const handleSubmit = (value) => {
+  //   return sendData({ value });
+  // };
+
+  // const sendData = async (dataToSend) => {
+  //   setStatus(LOAD_STATUS.PROGRESS);
+  //   try {
+  //     const res = await fetch("http://localhost:4000/card-create", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: convertData(dataToSend),
+  //     });
+
+  //     const data = await res.json();
+
+  //     if (res.ok) {
+  //       setStatus(null);
+
+  //       if (onCreate) onCreate();
+  //     } else {
+  //       setMessage(data.message);
+  //       setStatus(LOAD_STATUS.ERROR);
+  //     }
+  //   } catch (error) {
+  //     setMessage(error.message);
+  //     setStatus(LOAD_STATUS.ERROR);
+  //   }
+  // };
+
+  // const convertData = ({ value }) =>
+  //   JSON.stringify({
+  //     text: value,
+  //     username: "user",
+  //   });
+
   return (
     <Page>
       <div className="main-balance">
@@ -39,9 +83,9 @@ export default function Balance() {
           <div>
             <div className="button-operations__background--white">
               <div className="button-operations__background--blue">
-                <a href="/send">
+                <Link to="/send">
                   <span className="icon__send" />
-                </a>
+                </Link>
               </div>
             </div>
             <p className="button-operations__text">Send</p>
@@ -50,7 +94,7 @@ export default function Balance() {
       </div>
 
       <div className="card__block">
-        <a className="balance__link" href="/transaction/:231">
+        <Link className="balance__link" to="/transaction/:231">
           <Card
             logo={Stripe}
             name="Stripe"
@@ -58,11 +102,11 @@ export default function Balance() {
             type="Receipt"
             sign="+"
             sum="125.00"
-            hiddenPayment="none"
+            showSum="show"
           />
-        </a>
+        </Link>
 
-        <a className="balance__link" href="/transaction/:231">
+        <Link className="balance__link" to="/transaction/:231">
           <Card
             logo={Coinbase}
             name="Coinbase"
@@ -70,21 +114,22 @@ export default function Balance() {
             type="Receipt"
             sign="+"
             sum="125.00"
-            hiddenPayment="none"
+            showSum="show"
           />
-        </a>
+        </Link>
 
-        <a className="balance__link" href="/transaction/:231">
+        <Link className="balance__link" to="/transaction/:231">
           <Card
             logo={User}
             name="Oleg V."
             time="12:25"
-            type="Receipt"
-            sign="+"
+            type="Sending"
+            sign="-"
             sum="125.00"
-            hiddenPayment="none"
+            operation="sending"
+            showSum="show"
           />
-        </a>
+        </Link>
       </div>
     </Page>
   );

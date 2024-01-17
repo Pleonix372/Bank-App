@@ -7,6 +7,11 @@ import FieldPassword from "../../component/field-password";
 import Button from "../../component/button";
 import BackButton from "../../component/back-button";
 import { Form, REG_EXP_EMAIL, REG_EXP_PASSWORD } from "../../script/form";
+import { Link } from "react-router-dom";
+import { saveSession } from "../../script/session";
+import { loadSession } from "../../script/session";
+
+loadSession();
 
 class SignupForm extends Form {
   FIELD_NAME = {
@@ -46,6 +51,36 @@ class SignupForm extends Form {
     return undefined;
   };
 
+  // submit = async () => {
+  //   if (this.disabled === true) {
+  //     this.validateAll();
+  //   } else {
+  //     console.log(this.value);
+
+  //     this.setAlert("progress", "Завантаження...");
+
+  //     try {
+  //       const res = await fetch("/signup", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: this.convertData(),
+  //       });
+
+  //       const data = await res.json();
+
+  //       if (res.ok) {
+  //         this.setAlert("success", data.message);
+  //       } else {
+  //         this.setAlert("error", data.message);
+  //       }
+  //     } catch (error) {
+  //       this.setAlert("error", error.message);
+  //     }
+  //   }
+  // };
+
   submit = async () => {
     if (this.disabled === true) {
       this.validateAll();
@@ -55,7 +90,7 @@ class SignupForm extends Form {
       this.setWarning("error");
 
       try {
-        const res = await fetch("/signup", {
+        const res = await fetch("http://localhost:4000/signup", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -64,13 +99,20 @@ class SignupForm extends Form {
         });
 
         const data = await res.json();
-        alert(data.message);
-        // if (res.ok) {
-        //   this.setWarning("error");
-        // }
+        // alert(data.message);
+        this.setWarning("error", data.message);
+
+        if (res.ok) {
+          // this.setWarning("error", data.message);
+          alert("Відправлено код для підтвердження");
+          // alert(data.session.token);
+          saveSession(data.session);
+          window.location.assign("/signup-confirm");
+          // return <Navigate to="/signup-confirm" />;
+        }
       } catch (error) {
-        // this.setWarning("error");
-        alert("Помилка");
+        this.setWarning("error", error.message);
+        // alert(error.message);
       }
     }
   };
@@ -83,7 +125,7 @@ class SignupForm extends Form {
   };
 }
 
-window.signupForm = new SignupForm();
+// window.signupForm = new SignupForm();
 
 export default function Singup() {
   const signupForm = new SignupForm();
@@ -113,9 +155,7 @@ export default function Singup() {
             label="Email"
             placeholder="Ваш E-mail"
           />
-          <span name="email" class="form__error">
-            Помилка
-          </span>
+          <span name="email" className="form__error" />
         </div>
 
         <div className="form__item">
@@ -125,13 +165,11 @@ export default function Singup() {
             label="Password"
             placeholder="Ваш password"
           />
-          <span name="password" class="form__error">
-            Помилка
-          </span>
+          <span name="password" className="form__error" />
         </div>
 
         <p>
-          Already have an account? <a href="/signin">Sign In</a>
+          Already have an account? <Link to="/signin">Sign In</Link>
         </p>
 
         <Button
@@ -141,13 +179,10 @@ export default function Singup() {
         >
           Continue
         </Button>
+        {/* <span className="alert alert--disabled">Увага, помилка!</span> */}
         <div className="warning warning--disabled">
-          {/* <div className="warning--content"> */}
-          <span className="warning--icon"></span>
-          <div className="warning--text">
-            {/* A user with the same name is already exist */}
-          </div>
-          {/* </div> */}
+          <span className="warning--icon" />
+          <div className="warning--text" />
         </div>
       </div>
     </Page>

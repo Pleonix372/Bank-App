@@ -7,32 +7,266 @@ import Field from "../../component/field";
 import FieldPassword from "../../component/field-password";
 
 import BackButton from "../../svg/back-button.svg";
+import {
+  saveSession,
+  loadSession,
+  getTokenSession,
+} from "../../script/session";
+
+import { Form, REG_EXP_EMAIL, REG_EXP_PASSWORD } from "../../script/form";
+loadSession();
+
+class SettingsForm extends Form {
+  FIELD_NAME = {
+    EMAIL: "email",
+    PASSWORD: "password",
+    OLD_PASSWORD: "oldPassword",
+    NEW_PASSWORD: "newPassword",
+  };
+
+  FIELD_ERROR = {
+    IS_EMPTY: "Введіть значення в поле",
+    IS_BIG: "Дуже довге значення, приберіть зайве",
+    EMAIL: "Введіть коректне значення e-mail адреси",
+    PASSWORD: "",
+    OLD_PASSWORD: "",
+    NEW_PASSWORD:
+      "Новий пароль повинен складатися з не менш ніж 8 символів, включаючи хоча б одну цифру, малу та велику літеру",
+  };
+
+  validate = (name, value) => {
+    if (String(value).length < 1) {
+      return this.FIELD_ERROR.IS_EMPTY;
+    }
+
+    if (String(value).length > 20) {
+      return this.FIELD_ERROR.IS_BIG;
+    }
+
+    if (name === this.FIELD_NAME.EMAIL) {
+      if (!REG_EXP_EMAIL.test(String(value))) {
+        return this.FIELD_ERROR.EMAIL;
+      }
+    }
+
+    if (name === this.FIELD_NAME.PASSWORD) {
+      if (!REG_EXP_PASSWORD.test(String(value))) {
+        return this.FIELD_ERROR.PASSWORD;
+      }
+    }
+
+    if (name === this.FIELD_NAME.OLD_PASSWORD) {
+      if (!REG_EXP_PASSWORD.test(String(value))) {
+        return this.FIELD_ERROR.OLD_PASSWORD;
+      }
+    }
+
+    if (name === this.FIELD_NAME.NEW_PASSWORD) {
+      if (!REG_EXP_PASSWORD.test(String(value))) {
+        return this.FIELD_ERROR.NEW_PASSWORD;
+      }
+    }
+
+    return undefined;
+  };
+
+  submit = async () => {
+    if (this.disabled === true) {
+      this.validateAll();
+    } else {
+      console.log(this.value);
+
+      this.setWarning("error");
+
+      try {
+        const res = await fetch("http://localhost:4000/settings", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: this.convertData(),
+        });
+
+        const data = await res.json();
+        // alert(data.message);
+        this.setWarning("error", data.message);
+
+        if (res.ok) {
+          // this.setWarning("error", data.message);
+          alert("Відправлено код для підтвердження");
+          // alert(data.session.token);
+          saveSession(data.session);
+        }
+      } catch (error) {
+        this.setWarning("error", error.message);
+        // alert(error.message);
+      }
+    }
+  };
+
+  validateAll = (fields) => {
+    fields.forEach((name) => {
+      const error = this.validate(name, this.value[name]);
+
+      if (error) {
+        this.setError(name, error);
+      }
+    });
+  };
+
+  convertData = (fields) => {
+    const data = {};
+
+    fields.forEach((name) => {
+      data[name] = this.value[name];
+    });
+
+    data.token = getTokenSession();
+
+    return JSON.stringify(data);
+  };
+
+  checkDisabledForEmail = () => {
+    const fields = ["email", "password"];
+    const disabled = fields.some(
+      (name) => !this.value[name] || !!this.error[name]
+    );
+
+    const button = document.querySelector(".button--second");
+    if (button) {
+      button.classList.toggle("button--disabled", disabled);
+    }
+  };
+
+  checkDisabledForPassword = () => {
+    const fields = ["oldPassword", "newPassword"];
+    const disabled = fields.some(
+      (name) => !this.value[name] || !!this.error[name]
+    );
+
+    const button = document.querySelector(".button--second");
+    if (button) {
+      button.classList.toggle("button--disabled", disabled);
+    }
+  };
+}
 
 export default function Settings() {
+  // const settingsForm = new SettingsForm();
+
+  // const handleChange = (event) => {
+  //   const { name, value } = event.target;
+  //   settingsForm.change(name, value);
+  // };
+
+  // const handleSubmit = () => {
+  //   settingsForm.submit();
+  // };
+
+  const settingsForm = new SettingsForm();
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    settingsForm.change(name, value);
+
+    if (name === "email" || name === "password") {
+      settingsForm.checkDisabledForEmail();
+    }
+    if (name === "oldPassword" || name === "newPassword") {
+      settingsForm.checkDisabledForPassword();
+    }
+  };
+
+  const handleEmailSubmit = async () => {
+    // Логіка для зміни електронної пошти
+    settingsForm.validateAll(["email", "password"]);
+    // settingsForm.convertData(["email", "password"]);
+    try {
+      const res = await fetch("http://localhost:4000/change-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: settingsForm.convertData(["email", "password"]),
+      });
+
+      const data = await res.json();
+      settingsForm.setWarning("error", data.message);
+
+      if (res.ok) {
+        alert("Електронну пошту змінено успішно");
+      }
+    } catch (error) {
+      settingsForm.setWarning("error", error.message);
+    }
+  };
+
+  const handlePasswordSubmit = async () => {
+    // Логіка для зміни пароля
+    settingsForm.validateAll(["oldPassword", "newPassword"]);
+    // settingsForm.convertData(["oldPassword", "newPassword"]);
+    try {
+      const res = await fetch("http://localhost:4000/change-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: settingsForm.convertData(["oldPassword", "newPassword"]),
+      });
+
+      const data = await res.json();
+      settingsForm.setWarning("error", data.message);
+
+      if (res.ok) {
+        alert("Пароль змінено успішно");
+      }
+    } catch (error) {
+      settingsForm.setWarning("error", error.message);
+    }
+  };
+
+  const handleLogout = () => {
+    saveSession(null);
+    window.location.href = "/";
+  };
+
   return (
     <Page>
-      <div className="form margin">
+      <div className="form">
         <div>
           <Title title="Settings" buttonLeft={BackButton} hidden="hidden" />
         </div>
 
         <div className="form__item">
-          <h2>Change Email</h2>
+          <h2 className="margin">Change Email</h2>
 
-          <Field name="email" label="Email" placeholder="Ваш E-mail" />
+          <Field
+            onInput={handleChange}
+            name="email"
+            label="Email"
+            placeholder="Ваш E-mail"
+          />
+          <span name="email" className="form__error">
+            Помилка
+          </span>
         </div>
 
         <div className="form__item">
           <FieldPassword
+            onInput={handleChange}
             name="password"
             label="Old Password"
             placeholder="Ваш password"
           />
-          <span name="password" class="form__error">
+          <span name="password" className="form__error">
             Помилка
           </span>
         </div>
-        <Button className="button--second" href="/balance">
+        <Button
+          // onClick={handleSubmit}
+          onClick={handleEmailSubmit}
+          className="button--second button--disabled"
+        >
           Save Email
         </Button>
 
@@ -42,27 +276,45 @@ export default function Settings() {
           <h2>Change password</h2>
 
           <FieldPassword
-            name="password"
+            onInput={handleChange}
+            name="oldPassword"
             label="Old Password"
             placeholder="Ваш password"
           />
-          <span name="password" class="form__error">
+          <span name="oldPassword" className="form__error">
             Помилка
           </span>
         </div>
 
         <div className="form__item">
           <FieldPassword
-            name="password"
+            onInput={handleChange}
+            name="newPassword"
             label="New Password"
             placeholder="Ваш password"
           />
+          <span name="newPassword" className="form__error">
+            Помилка
+          </span>
         </div>
-        <Button className="button--second">Save Password</Button>
+        <Button
+          // onClick={handleSubmit}
+          onClick={handlePasswordSubmit}
+          className="button--second "
+        >
+          Save Password
+        </Button>
+
+        <div className="warning warning--disabled">
+          <span className="warning--icon" />
+          <div className="warning--text" />
+        </div>
 
         <span className="divider" />
 
-        <Button className="button--red">Log out</Button>
+        <Button onClick={handleLogout} className="button--red">
+          Log out
+        </Button>
       </div>
     </Page>
   );

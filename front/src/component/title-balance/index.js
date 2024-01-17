@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./index.scss";
 
 export default function Component({
@@ -11,13 +12,14 @@ export default function Component({
 }) {
   return (
     <div className="title-balance">
-      <a href={hrefLeft}>
+      <Link to={hrefLeft}>
         <img src={buttonLeft} alt="" className="icon__left" />
-      </a>
+      </Link>
+
       <h1 className={`title-balance__text ${className}`}>{title}</h1>
-      <a href={hrefRight}>
+      <Link to={hrefRight}>
         <img src={buttonRight} alt="" className={`icon__right ${hidden}`} />
-      </a>
+      </Link>
     </div>
   );
 }

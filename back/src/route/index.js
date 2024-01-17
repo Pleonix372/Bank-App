@@ -5,12 +5,14 @@ const router = express.Router()
 // Підключіть файли роутів
 const user = require('./user')
 // Підключіть інші файли роутів, якщо є
-const user = require('./auth')
+const auth = require('./auth')
+const card = require('./card')
 
 // Об'єднайте файли роутів за потреби
 router.use('/', user)
 // Використовуйте інші файли роутів, якщо є
 router.use('/', auth)
+router.use('/', card)
 
 router.get('/', (req, res) => {
   res.status(200).json('Hello World')

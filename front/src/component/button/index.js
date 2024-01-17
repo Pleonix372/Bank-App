@@ -1,11 +1,12 @@
+import { Link } from "react-router-dom";
 import "./index.scss";
 
 export default function Component({ onClick, children, className, href }) {
   return (
-    <a href={href}>
+    <Link to={href}>
       <button onClick={onClick} className={`button ${className}`}>
         {children}
       </button>
-    </a>
+    </Link>
   );
 }

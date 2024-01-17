@@ -36,23 +36,23 @@ export default function Component({
   };
 
   return (
-    <div class="field field--password">
-      <label for={name} class="field__label">
+    <div className="field field--password">
+      <label htmlFor={name} className="field__label">
         {label}
       </label>
 
-      <div class="field__wrapper">
+      <div className="field__wrapper">
         <input
           // onInput={`${action}(this.name, this.value)`}
           onInput={onInput}
           // onInput={FieldPassword.handleInput}
           type="password"
-          class="field__input validation"
+          className="field__input validation"
           name={name}
           value={value}
           placeholder={placeholder}
         />
-        <span onClick={handleToggle} class="field__icon"></span>
+        <span onClick={handleToggle} className="field__icon"></span>
       </div>
     </div>
   );

@@ -66,12 +66,22 @@ padding: 0 s.space(4);
   &__sum {
       font-size: 16px;
       color: s.color(green);
-      display: flex;
+      // display: flex;
+      display: none;
       align-items: center;
+
+      // &--receipt{
+      // color: s.color(green);
+      // }
+
+      &--sending{
+      color: s.color(text);
+      }
   }
 
   &__payment {
-      display: flex;
+      // display: flex;
+      display: none;
       gap: s.space(2);
 
       &--group {
@@ -95,5 +105,9 @@ padding: 0 s.space(4);
 }
 
 .none {
-    display: none;
+  display: none;
+}
+
+.show {
+    display: flex;
 }
