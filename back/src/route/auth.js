@@ -6,10 +6,10 @@ const { User } = require('../class/user')
 const { Confirm } = require('../class/confirm')
 const { Session } = require('../class/session')
 
-User.create({
-  email: 'test@mail.com',
-  password: '123qweQWE',
-})
+// User.create({
+//   email: 'test@mail.com',
+//   password: '123qweQWE',
+// })
 
 // ==============================================================
 
@@ -69,12 +69,6 @@ router.post('/signup', function (req, res) {
 //======================================================
 
 router.get('/signup-confirm', function (req, res) {
-  //   const { renew, email } = req.query
-
-  //   if (renew) {
-  //     Confirm.create(email)  // Відправляє код ще раз
-  //   }
-
   return res.render('signup-confirm', {
     name: 'signup-confirm',
     component: ['button', 'back-button', 'field'],
@@ -122,12 +116,6 @@ router.post('/signup-confirm', function (req, res) {
     const user = User.getByEmail(session.user.email)
     user.isConfirm = true
     session.user.isConfirm = true
-
-    // if (!user) {
-    //   return res.status(400).json({
-    //     message: 'Користувач з таким email не існує',
-    //   })
-    // }
 
     return res.status(200).json({
       //   message: 'Пароль змінено',
@@ -329,45 +317,6 @@ router.post('/settings', function (req, res) {
   const { email, password } = req.body
 
   console.log(email, password)
-
-  //   if (!code || !password) {
-  //     return res.status(400).json({
-  //       message: "Помилка. Обов'язкові поля відсутні",
-  //     })
-  //   }
-
-  //   try {
-  //     const email = Confirm.getData(Number(code))
-
-  //     if (!email) {
-  //       return res.status(400).json({
-  //         message: 'Такий код не існує',
-  //       })
-  //     }
-
-  //     const user = User.getByEmail(email)
-
-  //     if (!user) {
-  //       return res.status(400).json({
-  //         message: 'Користувач з таким email не існує',
-  //       })
-  //     }
-
-  //     user.password = password
-
-  //     console.log(user)
-
-  //     const session = Session.create(user)
-
-  //     return res.status(200).json({
-  //       //   message: 'Пароль змінено',
-  //       session,
-  //     })
-  //   } catch (err) {
-  //     res.status(400).json({
-  //       message: err.message,
-  //     })
-  //   }
 })
 
 //======================================================

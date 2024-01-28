@@ -8,39 +8,6 @@ const { Session } = require('../class/session')
 
 // ==================================
 
-router.get('/user-list', function (req, res) {
-  return res.render('user-list', {
-    name: 'user-list',
-    component: ['back-button'],
-    title: 'User list page',
-    data: {},
-  })
-})
-
-// ==================================
-
-router.get('/user-list-data', function (req, res) {
-  const list = User.getList()
-
-  console.log(list)
-
-  if (list.length === 0) {
-    return res.status(400).json({
-      message: 'Список користувачів порожній',
-    })
-  }
-
-  return res.status(200).json({
-    list: list.map(({ id, email, role }) => ({
-      id,
-      email,
-      role,
-    })),
-  })
-})
-
-// ==================================
-
 router.post('/change-email', function (req, res) {
   const { email, password, token } = req.body
 

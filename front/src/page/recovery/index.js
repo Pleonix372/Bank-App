@@ -42,8 +42,6 @@ class RecoveryForm extends Form {
     if (this.disabled === true) {
       this.validateAll();
     } else {
-      // this.setWarning("error");
-
       try {
         const res = await fetch("http://localhost:4000/recovery", {
           method: "POST",
@@ -54,16 +52,13 @@ class RecoveryForm extends Form {
         });
 
         const data = await res.json();
-        // alert(data.message);
-        this.setWarning("error", data.message); // Користувач не існує
+        this.setWarning("error", data.message);
         if (res.ok) {
-          // this.setWarning("error", data.message);
           alert("Код для відновлення паролю надіслано");
           window.location.assign("/recovery-confirm");
         }
       } catch (error) {
         this.setWarning("error", error.message);
-        // alert("Помилка");
       }
     }
   };
@@ -113,7 +108,6 @@ export default function Recovery() {
         <Button
           onClick={handleSubmit}
           className="button--first button--disabled"
-          //  href="/recovery-confirm"
         >
           Send code
         </Button>

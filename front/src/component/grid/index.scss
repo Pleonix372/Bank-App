@@ -1,0 +1,7 @@
+@use "../../style" as s;
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

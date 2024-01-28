@@ -60,16 +60,13 @@ class RecoveryConfirmForm extends Form {
         });
 
         const data = await res.json();
-        // alert(data.message);
         this.setWarning("error", data.message);
 
         if (res.ok) {
-          // this.setWarning("error", data.message);
           alert("Пароль успішно змінено");
         }
       } catch (error) {
         this.setWarning("error", error.message);
-        // alert(error.message);
       }
     }
   };
@@ -130,7 +127,6 @@ export default function RecoveryConfirm() {
         <Button
           onClick={handleSubmit}
           className="button--first button--disabled"
-          //  href="/balance"
         >
           Restore password
         </Button>

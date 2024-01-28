@@ -9,19 +9,24 @@ import Yellow from "../../svg/payment/yellow.svg";
 export default function Component({
   logo,
   name,
+  date,
   time,
   type,
-  sign,
   sum,
   padding,
   hiddenContent,
   showSum,
   showPayment,
   paymentReverse,
-  operation,
+  choice,
+  cursor,
+  onClick,
 }) {
   return (
-    <div className={`card card__${padding}`}>
+    <div
+      onClick={onClick}
+      className={`card card__${padding} card__${cursor} ${choice}`}
+    >
       <div className="card__content">
         <div className="button-operations__background--logo">
           <img src={logo} alt="" className="card__logo" />
@@ -30,14 +35,17 @@ export default function Component({
         <div className="card__data">
           <div className="card__data--name">{name}</div>
           <div className={`card__data--content ${hiddenContent}`}>
-            <div className="card__data--point">{time}</div>
-            <div className="card__data--point">{type}</div>
+            <div className="card__data--point">
+              {time}
+              {date}
+            </div>
+            <div className="card__data--point card__data--type">{type}</div>
           </div>
         </div>
       </div>
 
-      <div className={`card__sum card__sum--${operation} ${showSum}`}>
-        {sign}${sum}
+      <div className={`card__sum card__sum--${type} ${showSum}`}>
+        <span className={type}></span>${sum}
       </div>
 
       <div className={`card__payment ${showPayment}`}>

@@ -94,64 +94,7 @@ export default function SignupConfirm() {
         navigate("/");
       }
     } catch (err) {}
-
-    // document.querySelector("#renew").addEventListener("click", (e) => {
-    //   e.preventDefault();
-
-    //   const session = getSession();
-
-    //   window.location.assign(
-    //     `/signup-confirm?renew=true&email=${session.user.email}`
-    //   );
-    // });
   }, [navigate]);
-
-  //===============================================
-
-  // const navigate = useNavigate();
-  // const [session, setSession] = useState(getSession());
-
-  // useEffect(() => {
-  //   try {
-  //     if (session) {
-  //       if (session.user.isConfirm) {
-  //         navigate("/balance");
-  //       }
-  //     }
-  //   } catch (err) {}
-
-  //   const renewLink = document.querySelector(".link#renew");
-  //   if (renewLink) {
-  //     renewLink.addEventListener("click", handleRenewClick);
-  //   }
-
-  //   return () => {
-  //     if (renewLink) {
-  //       renewLink.removeEventListener("click", handleRenewClick);
-  //     }
-  //   };
-  // }, [session, navigate]);
-
-  // const handleRenewClick = (e) => {
-  //   e.preventDefault();
-  //   window.location.assign(
-  //     `signup-confirm?renew=true&email=${session.user.email}`
-  //   );
-  // };
-
-  //===================================================
-
-  //   document.addEventListener("DOMContentLoaded", () => {
-  //     try {
-  //       if (window.session) {
-  //         if (window.session.user.isConfirm) {
-  //           window.location.assign(`/balance`);
-  //         }
-  //       } else {
-  //         window.location.assign("/");
-  //       }
-  //     } catch (err) {}
-  //   });
 
   const signupConfirmForm = new SignupConfirmForm();
 
@@ -188,17 +131,9 @@ export default function SignupConfirm() {
         <Button
           onClick={handleSubmit}
           className="button--first button--disabled"
-          //  href="/balance"
         >
           Confirm
         </Button>
-        {/* <span>
-          Загубили код?
-          <Link to="signup-confirm?renew=true" className="link" id="renew">
-            {" "}
-            Відправити ще раз
-          </Link>
-        </span> */}
         <div className="warning warning--disabled">
           <span className="warning--icon" />
           <div className="warning--text" />

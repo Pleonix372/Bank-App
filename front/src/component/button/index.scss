@@ -42,7 +42,12 @@
     &:active {
     opacity: 0.5;
     cursor: default;
-    }
+    }    
+  }
+  
+  &:disabled {
+    cursor: default;
+    opacity: 0.7 !important;
   }
 }
 

@@ -1,31 +1,32 @@
-class Card {
+class Notification {
   static #list = []
   static #count = 1
 
-  constructor(name, sum, type, userId) {
-    this.id = Card.#count++
-
+  constructor(name, type, userId) {
+    this.id = Notification.#count++
     this.name = name
-    this.sum = sum
-
     this.type = type
     this.date = new Date().getTime()
     this.userId = userId
   }
 
-  static create(name, sum, type, userId) {
-    const newCard = new Card(name, sum, type, userId)
+  static create(name, type, userId) {
+    const newNotification = new Notification(
+      name,
+      type,
+      userId,
+    )
 
-    this.#list.push(newCard)
+    this.#list.push(newNotification)
 
     console.log(this.#list)
 
-    return newCard
+    return newNotification
   }
 
   static getListByUserId(userId) {
     return this.#list.filter(
-      (card) => card.userId === userId,
+      (notification) => notification.userId === userId,
     )
   }
 
@@ -40,5 +41,5 @@ class Card {
 }
 
 module.exports = {
-  Card,
+  Notification,
 }

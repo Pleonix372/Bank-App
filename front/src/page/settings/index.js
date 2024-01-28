@@ -11,6 +11,7 @@ import {
   saveSession,
   loadSession,
   getTokenSession,
+  getSession,
 } from "../../script/session";
 
 import { Form, REG_EXP_EMAIL, REG_EXP_PASSWORD } from "../../script/form";
@@ -88,18 +89,14 @@ class SettingsForm extends Form {
         });
 
         const data = await res.json();
-        // alert(data.message);
         this.setWarning("error", data.message);
 
         if (res.ok) {
-          // this.setWarning("error", data.message);
           alert("Відправлено код для підтвердження");
-          // alert(data.session.token);
           saveSession(data.session);
         }
       } catch (error) {
         this.setWarning("error", error.message);
-        // alert(error.message);
       }
     }
   };
@@ -132,7 +129,7 @@ class SettingsForm extends Form {
       (name) => !this.value[name] || !!this.error[name]
     );
 
-    const button = document.querySelector(".button--second");
+    const button = document.querySelector(".email");
     if (button) {
       button.classList.toggle("button--disabled", disabled);
     }
@@ -144,7 +141,7 @@ class SettingsForm extends Form {
       (name) => !this.value[name] || !!this.error[name]
     );
 
-    const button = document.querySelector(".button--second");
+    const button = document.querySelector(".password");
     if (button) {
       button.classList.toggle("button--disabled", disabled);
     }
@@ -152,18 +149,11 @@ class SettingsForm extends Form {
 }
 
 export default function Settings() {
-  // const settingsForm = new SettingsForm();
-
-  // const handleChange = (event) => {
-  //   const { name, value } = event.target;
-  //   settingsForm.change(name, value);
-  // };
-
-  // const handleSubmit = () => {
-  //   settingsForm.submit();
-  // };
 
   const settingsForm = new SettingsForm();
+
+  const session = getSession();
+  const userId = session ? Number(session.user.id) : null;
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -177,10 +167,24 @@ export default function Settings() {
     }
   };
 
+  const createNotification = async (operationType) => {
+    try {
+      const res = await fetch(
+        `http://localhost:4000/notifications/${operationType}?userId=${userId}`,
+        {
+          method: "GET",
+        }
+      );
+
+      const data = await res.json();
+      console.log(data.message);
+    } catch (error) {
+      console.error("Error creating notification:", error.message);
+    }
+  };
+
   const handleEmailSubmit = async () => {
-    // Логіка для зміни електронної пошти
     settingsForm.validateAll(["email", "password"]);
-    // settingsForm.convertData(["email", "password"]);
     try {
       const res = await fetch("http://localhost:4000/change-email", {
         method: "POST",
@@ -195,6 +199,8 @@ export default function Settings() {
 
       if (res.ok) {
         alert("Електронну пошту змінено успішно");
+
+        createNotification("change-email");
       }
     } catch (error) {
       settingsForm.setWarning("error", error.message);
@@ -202,9 +208,7 @@ export default function Settings() {
   };
 
   const handlePasswordSubmit = async () => {
-    // Логіка для зміни пароля
     settingsForm.validateAll(["oldPassword", "newPassword"]);
-    // settingsForm.convertData(["oldPassword", "newPassword"]);
     try {
       const res = await fetch("http://localhost:4000/change-password", {
         method: "POST",
@@ -219,6 +223,8 @@ export default function Settings() {
 
       if (res.ok) {
         alert("Пароль змінено успішно");
+
+        createNotification("change-password");
       }
     } catch (error) {
       settingsForm.setWarning("error", error.message);
@@ -263,9 +269,8 @@ export default function Settings() {
           </span>
         </div>
         <Button
-          // onClick={handleSubmit}
           onClick={handleEmailSubmit}
-          className="button--second button--disabled"
+          className="button--second email button--disabled"
         >
           Save Email
         </Button>
@@ -298,9 +303,8 @@ export default function Settings() {
           </span>
         </div>
         <Button
-          // onClick={handleSubmit}
           onClick={handlePasswordSubmit}
-          className="button--second "
+          className="button--second password button--disabled"
         >
           Save Password
         </Button>

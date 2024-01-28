@@ -11,21 +11,6 @@ export const saveSession = (session) => {
   }
 };
 
-// export const loadSession = () => {
-//   try {
-//     const session = JSON.parse(localStorage.getItem(SESSION_KEY));
-
-//     if (session) {
-//       window.session = session;
-//     } else {
-//       window.session = null;
-//     }
-//   } catch (err) {
-//     console.log(err);
-//     window.session = null;
-//   }
-// };
-
 export const loadSession = () => {
   try {
     const session = JSON.parse(localStorage.getItem(SESSION_KEY));
@@ -49,6 +34,17 @@ export const getTokenSession = () => {
     const session = getSession();
 
     return session ? session.token : null;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
+
+export const getUserSession = () => {
+  try {
+    const session = getSession();
+
+    return session ? session.user.id : null;
   } catch (err) {
     console.log(err);
     return null;

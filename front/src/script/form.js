@@ -13,10 +13,8 @@ export class Form {
   disabled = true;
 
   change = (name, value) => {
-    // console.log(name, value);
     const error = this.validate(name, value);
     this.value[name] = value;
-    // console.log(error);
 
     if (error) {
       this.setError(name, error);
@@ -56,25 +54,6 @@ export class Form {
       el.classList.toggle("button--disabled", Boolean(disabled));
     }
     this.disabled = disabled;
-    // let disabled = false;
-    // const fields = Object.values(this.FIELD_NAME).filter((name) =>
-    //   buttonName === "saveEmail"
-    //     ? ["email", "password"].includes(name)
-    //     : ["oldPassword", "newPassword"].includes(name)
-    // );
-
-    // fields.forEach((name) => {
-    //   if (this.error[name] || this.value[name] === undefined) {
-    //     disabled = true;
-    //   }
-    // });
-
-    // const el = document.querySelector(`.button--${buttonName}`);
-    // if (el) {
-    //   el.classList.toggle("button--disabled", Boolean(disabled));
-    // }
-
-    // this.disabled = disabled;
   };
 
   validateAll = () => {

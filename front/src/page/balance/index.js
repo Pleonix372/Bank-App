@@ -1,59 +1,60 @@
 import "./index.scss";
 
 import Page from "../../component/page";
-import Card from "../../component/card";
+import Box from "../../component/box";
 import Title from "../../component/title-balance";
 import Settings from "../../svg/settings.svg";
 import Notifications from "../../svg/notifications.svg";
-import Stripe from "../../svg/stripe.svg";
-import Coinbase from "../../svg/coinbase.svg";
-import User from "../../svg/user.svg";
+
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 
-// import { Alert, Loader, LOAD_STATUS } from "../../component/load";
+import { Alert, Skeleton, LOAD_STATUS } from "../../component/load";
 
-export default function Balance(onCreate) {
-  // const [status, setStatus] = useState(null);
-  // const [message, setMessage] = useState("");
+import { getDate } from "../../util/getDate";
+import CardItem from "../../container/card-item";
+import { getSession } from "../../script/session";
 
-  // const handleSubmit = (value) => {
-  //   return sendData({ value });
-  // };
+export default function Balance() {
+  const [balance, setBalance] = useState(0);
+  const [status, setStatus] = useState(null);
+  const [message, setMessage] = useState("");
+  const [data, setData] = useState(null);
 
-  // const sendData = async (dataToSend) => {
-  //   setStatus(LOAD_STATUS.PROGRESS);
-  //   try {
-  //     const res = await fetch("http://localhost:4000/card-create", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: convertData(dataToSend),
-  //     });
+  const session = getSession();
+  const userId = session ? Number(session.user.id) : null;
 
-  //     const data = await res.json();
-
-  //     if (res.ok) {
-  //       setStatus(null);
-
-  //       if (onCreate) onCreate();
-  //     } else {
-  //       setMessage(data.message);
-  //       setStatus(LOAD_STATUS.ERROR);
-  //     }
-  //   } catch (error) {
-  //     setMessage(error.message);
-  //     setStatus(LOAD_STATUS.ERROR);
-  //   }
-  // };
-
-  // const convertData = ({ value }) =>
-  //   JSON.stringify({
-  //     text: value,
-  //     username: "user",
-  //   });
-
+  const getData = async () => {
+    setStatus(LOAD_STATUS.PROGRESS);
+    try {
+      const res = await fetch(`http://localhost:4000/balance?userId=${userId}`);
+      const data = await res.json();
+      if (res.ok) {
+        setData(convertData(data));
+        setBalance(data.balance);
+        setStatus(LOAD_STATUS.SUCCESS);
+      } else {
+        setMessage(data.message);
+        setStatus(LOAD_STATUS.ERROR);
+      }
+    } catch (error) {
+      setMessage(error.message);
+      setStatus(LOAD_STATUS.ERROR);
+    }
+  };
+  const convertData = (raw) => ({
+    list: raw.list.reverse().map(({ id, name, sum, type, date }) => ({
+      id,
+      name,
+      sum,
+      type,
+      date: getDate(date),
+    })),
+    isEmpty: raw.list.length === 0,
+  });
+  if (status === null) {
+    getData();
+  }
   return (
     <Page>
       <div className="main-balance">
@@ -66,7 +67,7 @@ export default function Balance(onCreate) {
           hrefRight="/notifications"
         />
 
-        <div className="balance">$100.20</div>
+        <div className="balance">${balance}</div>
 
         <div className="button-operations">
           <div>
@@ -94,42 +95,40 @@ export default function Balance(onCreate) {
       </div>
 
       <div className="card__block">
-        <Link className="balance__link" to="/transaction/:231">
-          <Card
-            logo={Stripe}
-            name="Stripe"
-            time="12:25"
-            type="Receipt"
-            sign="+"
-            sum="125.00"
-            showSum="show"
-          />
-        </Link>
+        {status === LOAD_STATUS.PROGRESS && (
+          <Fragment>
+            <Box>
+              <Skeleton />
+            </Box>
+            <Box>
+              <Skeleton />
+            </Box>
+          </Fragment>
+        )}
 
-        <Link className="balance__link" to="/transaction/:231">
-          <Card
-            logo={Coinbase}
-            name="Coinbase"
-            time="12:25"
-            type="Receipt"
-            sign="+"
-            sum="125.00"
-            showSum="show"
-          />
-        </Link>
+        {status === LOAD_STATUS.ERROR && (
+          <Alert status={status} message={message} />
+        )}
 
-        <Link className="balance__link" to="/transaction/:231">
-          <Card
-            logo={User}
-            name="Oleg V."
-            time="12:25"
-            type="Sending"
-            sign="-"
-            sum="125.00"
-            operation="sending"
-            showSum="show"
-          />
-        </Link>
+        {status === LOAD_STATUS.SUCCESS && (
+          <Fragment>
+            {data.isEmpty ? (
+              // <Alert message="Платежі відсутні" />
+              <Box>Список платежів пустий</Box>
+            ) : (
+              data.list.map((item) => (
+                <Fragment key={item.id}>
+                  <Link
+                    className="balance__link"
+                    to={`/transaction/:${item.id}`}
+                  >
+                    <CardItem {...item} />
+                  </Link>
+                </Fragment>
+              ))
+            )}
+          </Fragment>
+        )}
       </div>
     </Page>
   );

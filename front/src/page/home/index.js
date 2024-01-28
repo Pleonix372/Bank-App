@@ -5,20 +5,6 @@ import Money from "../../png/money.png";
 import Button from "../../component/button";
 import Page from "../../component/page";
 
-// document.addEventListener("DOMContentLoaded", () => {
-  // if (window.session) {
-  //   const { user } = window.session;
-  //   if (user.isConfirm) {
-  //     window.location.assign("/balance");
-  //   } else {
-  //     window.location.assign("/signup-confirm");
-  //   }
-  // }
-  // else {
-  //   window.location.assign("/");
-  // }
-// });
-
 export default function Home() {
   return (
     <Page>

@@ -51,36 +51,6 @@ class SignupForm extends Form {
     return undefined;
   };
 
-  // submit = async () => {
-  //   if (this.disabled === true) {
-  //     this.validateAll();
-  //   } else {
-  //     console.log(this.value);
-
-  //     this.setAlert("progress", "Завантаження...");
-
-  //     try {
-  //       const res = await fetch("/signup", {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: this.convertData(),
-  //       });
-
-  //       const data = await res.json();
-
-  //       if (res.ok) {
-  //         this.setAlert("success", data.message);
-  //       } else {
-  //         this.setAlert("error", data.message);
-  //       }
-  //     } catch (error) {
-  //       this.setAlert("error", error.message);
-  //     }
-  //   }
-  // };
-
   submit = async () => {
     if (this.disabled === true) {
       this.validateAll();
@@ -99,20 +69,15 @@ class SignupForm extends Form {
         });
 
         const data = await res.json();
-        // alert(data.message);
         this.setWarning("error", data.message);
 
         if (res.ok) {
-          // this.setWarning("error", data.message);
           alert("Відправлено код для підтвердження");
-          // alert(data.session.token);
           saveSession(data.session);
           window.location.assign("/signup-confirm");
-          // return <Navigate to="/signup-confirm" />;
         }
       } catch (error) {
         this.setWarning("error", error.message);
-        // alert(error.message);
       }
     }
   };
@@ -124,8 +89,6 @@ class SignupForm extends Form {
     });
   };
 }
-
-// window.signupForm = new SignupForm();
 
 export default function Singup() {
   const signupForm = new SignupForm();
@@ -175,11 +138,9 @@ export default function Singup() {
         <Button
           onClick={handleSubmit}
           className="button--first button--disabled"
-          // href="/signup-confirm"
         >
           Continue
         </Button>
-        {/* <span className="alert alert--disabled">Увага, помилка!</span> */}
         <div className="warning warning--disabled">
           <span className="warning--icon" />
           <div className="warning--text" />

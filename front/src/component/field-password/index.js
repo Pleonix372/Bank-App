@@ -14,11 +14,6 @@ class FieldPassword {
       input.setAttribute("type", "password");
     }
   };
-
-  // static handleInput = (event) => {
-  //   const { name, value } = event.target;
-  //   console.log(name, value);
-  // };
 }
 
 window.fieldPassword = FieldPassword;
@@ -27,7 +22,7 @@ export default function Component({
   name,
   label,
   onInput,
-  // action,
+  onChange,
   value,
   placeholder,
 }) {
@@ -43,9 +38,8 @@ export default function Component({
 
       <div className="field__wrapper">
         <input
-          // onInput={`${action}(this.name, this.value)`}
           onInput={onInput}
-          // onInput={FieldPassword.handleInput}
+          onChange={onChange}
           type="password"
           className="field__input validation"
           name={name}

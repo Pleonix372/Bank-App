@@ -1,5 +1,5 @@
 import "./index.scss";
 
-export default function Component({ children }) {
-  return <div className="page">{children}</div>;
+export default function Component({ children, classname }) {
+  return <div className={`page ${classname}`}>{children}</div>;
 }

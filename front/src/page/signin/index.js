@@ -62,18 +62,15 @@ class SigninForm extends Form {
         });
 
         const data = await res.json();
-        // alert(data.message);
         this.setWarning("error", data.message);
 
         if (res.ok) {
-          // this.setWarning("error", data.message);
           alert("Ви увійшли в акаунт");
           saveSession(data.session);
           window.location.assign("/balance");
         }
       } catch (error) {
         this.setWarning("error", error.message);
-        // alert(error.message);
       }
     }
   };
@@ -152,7 +149,6 @@ export default function Signin() {
         <Button
           onClick={handleSubmit}
           className="button--first button--disabled"
-          //  href="/balance"
         >
           Continue
         </Button>

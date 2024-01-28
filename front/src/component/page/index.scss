@@ -1,34 +1,34 @@
 @use "../../style" as s;
 
 .page {
-  // margin: 20px auto;
-  max-width: 393px;
-	width: 100%;
-
-  // border: 1px solid #1f1d1d;
-  // border-radius: s.space(8);
+	max-width: 393px;
+	width: 100%;  
 }
 
 :root {
 	background-color: #1E1E1E;
+	
 }
 
 html {
 	min-height: 100%;
 	padding: 64px 0;
-	display: grid;
+	// display: grid;
+	
+	
 }
 
 body {
-	// font-family: 'Roboto', sans-serif;
-
 	max-width: 393px;
 	width: 100%;
 	margin: auto;
 	height: 100%;
 
 	background-color: #fff;
-  border-radius: s.space(8);
+  	border-radius: s.space(8);
+}
 
-	// display: flex;
+.grayPage {
+	background-color: #f7f7f7;
+	border-radius: s.space(8);
 }

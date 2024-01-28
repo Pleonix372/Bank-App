@@ -1,3 +1,5 @@
+@use "../../style" as s;
+
 .alert {
   border: 1px solid transparent;
   border-radius: 10px;
@@ -50,7 +52,7 @@
 
 .skeleton {
   display: grid;
-  grid-template-rows: repeat(3, 16px);
+  grid-template-rows: repeat(2, 16px);
   gap: 8px;
 }
 

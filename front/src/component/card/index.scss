@@ -4,9 +4,12 @@
   display: flex;
   justify-content: space-between;
   border-radius: s.space(4);
-margin: s.space(5) 0;
-padding: 0 s.space(4);
+  margin: s.space(5) 0;
   background-color: #fff;
+
+  &__pointer {
+    cursor: pointer;
+  }
 
   &__padding {
     padding: s.space(4);
@@ -21,7 +24,6 @@ padding: 0 s.space(4);
   &__logo {
       height: 18px;
       width: 18px;
-    //   background-image: url("../../svg/stripe.svg");
       background-size: cover;
       position: absolute;
       top: calc(50% - 9px);
@@ -51,6 +53,11 @@ padding: 0 s.space(4);
           display: flex;
           gap: s.space(1);
           align-items: center;
+          
+      }
+
+      &--type {
+        text-transform: capitalize;
       }
 
       &--point:not(:last-child)::after {
@@ -66,13 +73,8 @@ padding: 0 s.space(4);
   &__sum {
       font-size: 16px;
       color: s.color(green);
-      // display: flex;
       display: none;
       align-items: center;
-
-      // &--receipt{
-      // color: s.color(green);
-      // }
 
       &--sending{
       color: s.color(text);
@@ -80,13 +82,11 @@ padding: 0 s.space(4);
   }
 
   &__payment {
-      // display: flex;
       display: none;
       gap: s.space(2);
 
       &--group {
         display: flex;
-        // flex-direction: row-reverse;
       gap: s.space(2);
       }
 
@@ -110,4 +110,16 @@ padding: 0 s.space(4);
 
 .show {
     display: flex;
+}
+
+.receipt::after {
+  content: "+";
+}
+
+.sending::after {
+  content: "-";
+}
+
+.choice {
+  border: 1px solid s.color(green);
 }
