@@ -6,7 +6,6 @@ export default function BackButton() {
   const navigate = useNavigate();
 
   const goBack = () => {
-    alert("hello");
     navigate(-1);
   };
 

@@ -7,7 +7,7 @@ import Settings from "../../svg/settings.svg";
 import Notifications from "../../svg/notifications.svg";
 
 import { Link } from "react-router-dom";
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect } from "react";
 
 import { Alert, Skeleton, LOAD_STATUS } from "../../component/load";
 
@@ -20,6 +20,8 @@ export default function Balance() {
   const [status, setStatus] = useState(null);
   const [message, setMessage] = useState("");
   const [data, setData] = useState(null);
+
+  // const [allTransactions, setAllTransactions] = useState(null);
 
   const session = getSession();
   const userId = session ? Number(session.user.id) : null;
@@ -42,6 +44,26 @@ export default function Balance() {
       setStatus(LOAD_STATUS.ERROR);
     }
   };
+
+  // const getAllTransactions = async () => {
+  //   try {
+  //     const res = await fetch(
+  //       `http://localhost:4000/received?userId=${userId}`
+  //     );
+  //     const data = await res.json();
+
+  //     if (res.ok) {
+  //       setAllTransactions(convertData(data)); // Оновіть стейт всіх транзакцій
+  //     } else {
+  //       setMessage(data.message);
+  //       setStatus(LOAD_STATUS.ERROR);
+  //     }
+  //   } catch (error) {
+  //     setMessage(error.message);
+  //     setStatus(LOAD_STATUS.ERROR);
+  //   }
+  // };
+
   const convertData = (raw) => ({
     list: raw.list.reverse().map(({ id, name, sum, type, date }) => ({
       id,
@@ -55,6 +77,12 @@ export default function Balance() {
   if (status === null) {
     getData();
   }
+
+  useEffect(() => {
+    getData();
+    // getAllTransactions(); // Викликайте функцію отримання всіх транзакцій при завантаженні компонента
+  }, []);
+
   return (
     <Page>
       <div className="main-balance">
@@ -129,6 +157,24 @@ export default function Balance() {
             )}
           </Fragment>
         )}
+        {/* {status === LOAD_STATUS.SUCCESS && allTransactions !== null && (
+          <Fragment>
+            {allTransactions.isEmpty ? (
+              <Box>Список платежів пустий</Box>
+            ) : (
+              allTransactions.list.map((item) => (
+                <Fragment key={item.id}>
+                  <Link
+                    className="balance__link"
+                    to={`/transaction/:${item.id}`}
+                  >
+                    <CardItem {...item} />
+                  </Link>
+                </Fragment>
+              ))
+            )}
+          </Fragment>
+        )} */}
       </div>
     </Page>
   );

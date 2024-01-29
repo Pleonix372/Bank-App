@@ -1,5 +1,6 @@
 class Card {
   static #list = []
+  static #receivedList = []
   static #count = 1
 
   constructor(name, sum, type, userId) {
@@ -24,19 +25,50 @@ class Card {
   }
 
   static getListByUserId(userId) {
-    return this.#list.filter(
+    return [...this.#list, ...this.#receivedList].filter(
       (card) => card.userId === userId,
     )
   }
 
-  static getById(id) {
-    return (
-      this.#list.find((item) => item.id === Number(id)) ||
-      null
+  static getListByReceiverId(userId, type) {
+    return this.#list.filter(
+      (card) =>
+        card.userId === userId && card.type === type,
     )
   }
 
+  static getById(id) {
+    const cleanId = Number(id)
+    const transaction = [
+      ...this.#list,
+      ...this.#receivedList,
+    ].find((item) => item.id === cleanId)
+
+    return transaction || null
+  }
+
   static getList = () => this.#list
+
+  static createReceived(name, sum, type, userId) {
+    const newReceivedCard = new Card(
+      name,
+      sum,
+      'receipt',
+      userId,
+    )
+
+    this.#receivedList.push(newReceivedCard)
+
+    console.log('newReceivedCard:', newReceivedCard)
+    console.log('receivedList:', this.#receivedList)
+    return newReceivedCard
+  }
+
+  static getReceivedListByUserId(userId) {
+    return this.#receivedList.filter(
+      (card) => card.userId === userId,
+    )
+  }
 }
 
 module.exports = {

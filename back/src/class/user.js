@@ -10,6 +10,7 @@ class User {
     this.password = String(password)
 
     this.isConfirm = false
+    this.balance = 0
   }
 
   static create(data) {

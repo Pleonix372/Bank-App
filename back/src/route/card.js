@@ -2,14 +2,48 @@
 const express = require('express')
 const router = express.Router()
 
-const { Card } = require('../class/card')
 const { User } = require('../class/user')
+const { Card } = require('../class/card')
 const { Session } = require('../class/session')
 const { Notification } = require('../class/notification')
 
 //========================================
 
-router.post('/receive', function (req, res) {
+router.get('/receive', function (req, res) {
+  try {
+    const userId = Number(req.query.userId)
+    console.log('userId:', userId)
+    const list = Card.getListByUserId(userId)
+
+    if (list.length === 0) {
+      return res.status(200).json({
+        list: [],
+      })
+    }
+
+    return res.status(200).json({
+      list: list.map(
+        ({ id, name, sum, type, date, userId }) => ({
+          id,
+          name,
+          sum,
+          type,
+          date,
+          userId,
+        }),
+      ),
+    })
+  } catch (e) {
+    console.error('Backend error:', e)
+    return res.status(400).json({
+      message: e.message,
+    })
+  }
+})
+
+//========================================
+
+router.post('/receive', async function (req, res) {
   try {
     const { name, type, sum, token, userId } = req.body
     console.log('Receive userId:', userId)
@@ -52,7 +86,7 @@ router.post('/receive', function (req, res) {
 //========================================
 
 router.post('/send', function (req, res) {
-  const { name, sum, token, userId } = req.body
+  const { name, sum, token, userId, cardId } = req.body
 
   console.log(name, sum, token)
 
@@ -94,20 +128,36 @@ router.post('/send', function (req, res) {
       })
     }
 
-    const newCard = Card.create(
+    const newCardSent = Card.create(
       name,
       sum,
       'sending',
       userId,
     )
 
+    const recipientUserId = recipientUser.id
+
+    const newCardReceived = Card.createReceived(
+      currentUser.email,
+      sum,
+      'receive',
+      recipientUserId,
+    )
+
     return res.status(200).json({
-      Card: {
-        id: newCard.id,
-        name: newCard.name,
-        sum: newCard.sum,
-        type: newCard.type,
-        date: newCard.date,
+      CardSent: {
+        id: newCardSent.id,
+        name: newCardSent.name,
+        sum: newCardSent.sum,
+        type: newCardSent.type,
+        date: newCardSent.date,
+      },
+      CardReceived: {
+        id: newCardReceived.id,
+        name: newCardReceived.name,
+        sum: newCardReceived.sum,
+        type: newCardReceived.type,
+        date: newCardReceived.date,
       },
     })
   } catch (e) {
@@ -122,31 +172,49 @@ router.post('/send', function (req, res) {
 router.get('/balance', function (req, res) {
   try {
     const userId = Number(req.query.userId)
+    // const currentUser = User.getById(userId)
     console.log('userId:', userId)
     const list = Card.getListByUserId(userId)
+    const receivedList =
+      Card.getReceivedListByUserId(userId)
+    console.log('receivedList:', receivedList)
 
-    if (list.length === 0) {
+    if (list.length === 0 && receivedList.length === 0) {
       return res.status(200).json({
         list: [],
         balance: 0,
       })
     }
 
-    const balance = list
-      .reduce((acc, { type, sum }) => {
+    // const balance = currentUser.calculateBalance()
+
+    const balance = list.reduce((acc, { type, sum }) => {
+      const numericSum = parseFloat(sum)
+
+      if (type === 'receipt' && !isNaN(numericSum)) {
+        return acc + numericSum
+      } else if (type === 'sending' && !isNaN(numericSum)) {
+        return acc - numericSum
+      }
+      return acc
+    }, 0)
+    // .toFixed(2)
+
+    const balanceFromReceived = receivedList.reduce(
+      (acc, { type, sum }) => {
         const numericSum = parseFloat(sum)
 
-        if (type === 'receipt' && !isNaN(numericSum)) {
+        if (type === 'receive' && !isNaN(numericSum)) {
           return acc + numericSum
-        } else if (
-          type === 'sending' &&
-          !isNaN(numericSum)
-        ) {
-          return acc - numericSum
         }
         return acc
-      }, 0)
-      .toFixed(2)
+      },
+      0,
+    )
+
+    const totalBalance = parseFloat(
+      (balance + balanceFromReceived).toFixed(2),
+    )
 
     return res.status(200).json({
       list: list.map(
@@ -159,7 +227,8 @@ router.get('/balance', function (req, res) {
           userId,
         }),
       ),
-      balance: balance,
+      // balance: parseFloat(balance.toFixed(2)),
+      balance: totalBalance,
     })
   } catch (e) {
     console.error('Backend error:', e) //
@@ -281,13 +350,42 @@ router.get(
 
     try {
       Notification.create(
+        'The account was replenished',
+        'announcement',
+        userId,
+      )
+
+      return res.status(200).json({
+        message: 'Ваш рахунок поповнено',
+      })
+    } catch (e) {
+      return res.status(400).json({
+        message: e.message,
+      })
+    }
+  },
+)
+
+//========================================
+
+router.get(
+  '/notifications/transaction-getting',
+  function (req, res) {
+    const userId = Number(req.query.userId)
+
+    if (!userId) {
+      throw new Error('userId is required')
+    }
+
+    try {
+      Notification.create(
         'Receiving a transaction',
         'announcement',
         userId,
       )
 
       return res.status(200).json({
-        message: 'Вам надійшов переказ',
+        message: 'Ваш надійшов переказ',
       })
     } catch (e) {
       return res.status(400).json({
@@ -316,7 +414,7 @@ router.get(
       )
 
       return res.status(200).json({
-        message: 'Ви відправили переказ',
+        message: 'Переказ відправлено',
       })
     } catch (e) {
       return res.status(400).json({
@@ -327,6 +425,31 @@ router.get(
 )
 
 //========================================
+
+router.get('/recipient-info', function (req, res) {
+  const recipientEmail = req.query.email
+
+  if (!recipientEmail) {
+    return res.status(400).json({
+      message: 'Email is required',
+    })
+  }
+
+  const recipientUser = User.getByEmail(recipientEmail)
+
+  if (!recipientUser) {
+    return res.status(404).json({
+      message: 'Recipient not found',
+    })
+  }
+
+  const recipientInfo = {
+    userId: recipientUser.id,
+    email: recipientUser.email,
+  }
+
+  res.json(recipientInfo)
+})
 
 // Експортуємо глобальний роутер
 module.exports = router

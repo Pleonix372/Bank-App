@@ -16,14 +16,25 @@ export default function Container({ onCreate, id = null }) {
 
   let navigate = useNavigate();
 
-  const handleSubmit = (email, sum) => {
-    return sendData({ email, sum });
+  // const handleSubmit = (email, sum, recipientUserId) => {
+  //   return sendData({ email, sum, recipientUserId });
+  // };
+
+  const handleSubmit = async (email, sum) => {
+    try {
+      const recipientUserId = await getRecipientUserId(email);
+      await sendData({ email, sum, recipientUserId: recipientUserId });
+    } catch (error) {
+      console.error("Error getting recipientUserId:", error.message);
+      setMessage("Помилка отримання ідентифікатора отримувача");
+      setStatus(LOAD_STATUS.ERROR);
+    }
   };
 
-  const createNotification = async (operationType) => {
+  const createNotification = async (operationType, recipientUserId) => {
     try {
       const res = await fetch(
-        `http://localhost:4000/notifications/${operationType}?userId=${userId}`,
+        `http://localhost:4000/notifications/${operationType}?userId=${recipientUserId}`,
         {
           method: "GET",
         }
@@ -71,8 +82,14 @@ export default function Container({ onCreate, id = null }) {
       if (res.ok) {
         setStatus(null);
         navigate("/balance");
+
         if (onCreate) onCreate();
-        createNotification("transaction-send");
+
+        createNotification("transaction-send", userId);
+
+        if (dataToSend.recipientUserId) {
+          createNotification("transaction-getting", dataToSend.recipientUserId);
+        }
       } else {
         setMessage(data.message);
         setStatus(LOAD_STATUS.ERROR);
@@ -83,10 +100,34 @@ export default function Container({ onCreate, id = null }) {
     }
   };
 
+  const getRecipientUserId = async (recipientEmail) => {
+    try {
+      const res = await fetch(
+        `http://localhost:4000/recipient-info?email=${recipientEmail}`,
+        {
+          headers: {
+            Authorization: `Bearer ${getTokenSession()}`,
+          },
+        }
+      );
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.error("Error getting recipientUserId:", data.message);
+        throw new Error(data.message);
+      }
+
+      return data.userId;
+    } catch (error) {
+      console.error("Error getting recipientUserId:", error.message);
+      throw error;
+    }
+  };
+
   const session = getSession();
   const userId = session ? session.user.id : null;
 
-  const convertData = ({ email, sum }) => {
+  const convertData = ({ email, sum, recipientUserId }) => {
     return JSON.stringify({
       sum: sum,
       name: email,
@@ -94,6 +135,7 @@ export default function Container({ onCreate, id = null }) {
       cardId: id,
       userId: userId,
       token: getTokenSession(),
+      recipientUserId: recipientUserId,
     });
   };
 
