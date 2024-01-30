@@ -3,32 +3,30 @@
 .page {
 	max-width: 393px;
 	width: 100%;  
+	min-height: 100vh;
 }
 
 :root {
 	background-color: #1E1E1E;
-	
 }
 
 html {
 	min-height: 100%;
 	padding: 64px 0;
-	// display: grid;
-	
-	
+	display: grid;
 }
 
 body {
 	max-width: 393px;
 	width: 100%;
 	margin: auto;
-	height: 100%;
+	// height: 100%;
 
 	background-color: #fff;
   	border-radius: s.space(8);
 }
 
-.grayPage {
+.grayPage {	
 	background-color: #f7f7f7;
 	border-radius: s.space(8);
 }
