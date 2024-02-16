@@ -157,24 +157,6 @@ export default function Balance() {
             )}
           </Fragment>
         )}
-        {/* {status === LOAD_STATUS.SUCCESS && allTransactions !== null && (
-          <Fragment>
-            {allTransactions.isEmpty ? (
-              <Box>Список платежів пустий</Box>
-            ) : (
-              allTransactions.list.map((item) => (
-                <Fragment key={item.id}>
-                  <Link
-                    className="balance__link"
-                    to={`/transaction/:${item.id}`}
-                  >
-                    <CardItem {...item} />
-                  </Link>
-                </Fragment>
-              ))
-            )}
-          </Fragment>
-        )} */}
       </div>
     </Page>
   );

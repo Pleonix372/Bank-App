@@ -137,10 +137,10 @@ router.post('/send', function (req, res) {
 
     const recipientUserId = recipientUser.id
 
-    const newCardReceived = Card.createReceived(
+    const newCardReceived = Card.create(
       currentUser.email,
       sum,
-      'receive',
+      'receipt',
       recipientUserId,
     )
 
@@ -172,21 +172,15 @@ router.post('/send', function (req, res) {
 router.get('/balance', function (req, res) {
   try {
     const userId = Number(req.query.userId)
-    // const currentUser = User.getById(userId)
     console.log('userId:', userId)
     const list = Card.getListByUserId(userId)
-    const receivedList =
-      Card.getReceivedListByUserId(userId)
-    console.log('receivedList:', receivedList)
 
-    if (list.length === 0 && receivedList.length === 0) {
+    if (list.length === 0) {
       return res.status(200).json({
         list: [],
         balance: 0,
       })
     }
-
-    // const balance = currentUser.calculateBalance()
 
     const balance = list.reduce((acc, { type, sum }) => {
       const numericSum = parseFloat(sum)
@@ -198,23 +192,8 @@ router.get('/balance', function (req, res) {
       }
       return acc
     }, 0)
-    // .toFixed(2)
 
-    const balanceFromReceived = receivedList.reduce(
-      (acc, { type, sum }) => {
-        const numericSum = parseFloat(sum)
-
-        if (type === 'receive' && !isNaN(numericSum)) {
-          return acc + numericSum
-        }
-        return acc
-      },
-      0,
-    )
-
-    const totalBalance = parseFloat(
-      (balance + balanceFromReceived).toFixed(2),
-    )
+    const totalBalance = parseFloat(balance.toFixed(2))
 
     return res.status(200).json({
       list: list.map(
@@ -227,7 +206,6 @@ router.get('/balance', function (req, res) {
           userId,
         }),
       ),
-      // balance: parseFloat(balance.toFixed(2)),
       balance: totalBalance,
     })
   } catch (e) {

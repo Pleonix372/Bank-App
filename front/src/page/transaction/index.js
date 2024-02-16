@@ -26,8 +26,13 @@ export default function Transaction() {
           const formattedTransaction = {
             ...data.transaction,
             date: getFormattedDate(data.transaction.date),
-            type: data.transaction.type === "receipt" ? "Receive" : "Send",
+            type:
+              data.transaction.type.toLowerCase() === "receipt"
+                ? "Receive"
+                : "Send",
           };
+
+          console.log(data.transaction);
 
           setTransactionData(formattedTransaction);
         } else {
@@ -46,16 +51,28 @@ export default function Transaction() {
   useEffect(() => {
     const sum = document.querySelector(".balance");
 
-    if (sum && transactionData && transactionData.type === "Send") {
+    if (
+      sum &&
+      transactionData &&
+      transactionData.type.toLowerCase() === "send"
+    ) {
       sum.classList.remove("balance--green");
       sum.classList.add("card__sum--sending");
     }
 
     const sign = document.querySelector(".sign");
 
-    if (sign && transactionData && transactionData.type === "Send") {
+    if (
+      sign &&
+      transactionData &&
+      transactionData.type.toLowerCase() === "send"
+    ) {
       sign.classList.add("send");
-    } else if (sign && transactionData && transactionData.type === "Receive") {
+    } else if (
+      sign &&
+      transactionData &&
+      transactionData.type.toLowerCase() === "receive"
+    ) {
       sign.classList.add("receive");
     }
   }, [transactionData]);
@@ -72,7 +89,7 @@ export default function Transaction() {
   }
 
   return (
-    <Page>
+    <Page classname="grayPage">
       <div className="back">
         <Title title="Transaction" buttonLeft={BackButton} hidden="hidden" />
 
@@ -87,7 +104,7 @@ export default function Transaction() {
               <span>{transactionData.date}</span>
             </div>
           </div>
-          
+
           <div className="data-block__card">
             <div className="data-block__content">
               <span>Address</span>
